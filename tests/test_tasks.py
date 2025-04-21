@@ -34,6 +34,9 @@ def test_process_note_success(app, database, celery_app, test_user):
 def test_process_note_retries(app, database, celery_app, test_user):
     """Test retry logic for failed upstream calls"""
     with app.app_context():
+        # Ensure test_user is attached to this session
+        test_user = database.session.merge(test_user)
+        
         # Create test contact and note
         contact = Contact(user_id=test_user.id, name='Retry Contact')
         database.session.add(contact)
@@ -43,6 +46,7 @@ def test_process_note_retries(app, database, celery_app, test_user):
         database.session.add(note)
         database.session.commit()
         note_id = note.id
+        contact_id = contact.id  # Store contact_id for later use
 
     with patch('app.tasks.requests.post') as mock_post:
         # Configure mock to fail twice then succeed
@@ -69,13 +73,14 @@ def test_process_note_retries(app, database, celery_app, test_user):
         # Verify exactly 3 calls were made
         assert mock_post.call_count == 3
         
-        # Verify consistent payload in each call
+        # Verify URL and payload in each call
+        expected_url = f'http://127.0.0.1:5000/contacts/{note.contact_id}/notes'
         expected_json = {
-            'note_id': note_id,
             'body': 'Retry test note'
         }
         for call in mock_post.call_args_list:
-            _, kwargs = call
+            args, kwargs = call
+            assert args[0] == expected_url  # Check the URL is correct
             assert kwargs['json'] == expected_json
             assert kwargs['timeout'] == 3  # Verify timeout is set
 
