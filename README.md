@@ -36,7 +36,7 @@ A robust backend service for managing contacts and their associated notes. This 
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/SaikumarReddy01/Contact_Note_System.git
    cd contact-notes-api
    ```
 
