@@ -76,7 +76,7 @@ def login():
     except Exception:
         return jsonify({'error': 'Invalid credentials'}), 401
     
-    access_token = create_access_token(identity=user.id)
+    access_token = create_access_token(identity=str(user.id))
     return jsonify(access_token=access_token), 200
 
 # Generate new access token using refresh token

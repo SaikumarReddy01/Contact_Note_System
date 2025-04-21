@@ -1,5 +1,4 @@
 flask==2.0.1
-flask-sqlalchemy==2.5.1
 flask-jwt-extended==4.3.1
 flask-migrate==3.1.0
 python-dotenv==0.19.1
@@ -12,3 +11,5 @@ requests==2.26.0
 pytest==6.2.5
 flask-swagger-ui==3.36.0
 flask-limiter==1.4
+SQLAlchemy==1.4.49
+werkzeug==2.0.3

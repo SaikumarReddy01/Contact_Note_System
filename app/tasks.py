@@ -35,13 +35,12 @@ def call_upstream_service(note):
     try:
         # Simulate calling an external service
         response = requests.post(
-            'http://127.0.0.1:5000/notes',
-            json={
-                'note_id': note.id,
-                'body': note.body
-            },
-            timeout=3  # Set a reasonable timeout
-        )
+                f'http://127.0.0.1:5000/contacts/{note.contact_id}/notes',
+                json={
+                    'body': note.body
+                },
+                timeout=3
+            )
         response.raise_for_status()
         return response.json()
     
